@@ -1,16 +1,40 @@
-# This is a sample Python script.
+from datamanager.sqlite_data_manager import SQLiteDataManager
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+db = SQLiteDataManager()
+users = db.get_all_users()
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+for user in users:
+    print(f"ID: {user.id}, Name: {user.name}")
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+new_user = db.add_user("Freddy")
+print(f"Added user: ID={new_user.id}, Name={new_user.name}")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+new_movie = db.add_movie(
+    name="Interstellar",
+    director="Christopher Nolan",
+    year=2014,
+    rating=8.6,
+    user_id=1
+)
+
+print(f"Added movie: {new_movie.name} ({new_movie.year}) by {new_movie.director}")
+
+updated_movie = db.update_movie(
+    movie_id=1,
+    name="Interstellar (Updated)",
+    rating=9.0
+)
+
+if updated_movie:
+    print(f"Updated movie: {updated_movie.name}, Rating: {updated_movie.rating}")
+else:
+    print("Movie not found.")
+
+was_deleted = db.delete_movie(movie_id=1)
+
+if was_deleted:
+    print("Movie deleted successfully.")
+else:
+    print("Movie not found.")

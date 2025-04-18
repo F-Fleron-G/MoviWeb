@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie - MovieWeb App</title>
+</head>
+<body>
+    <h1>Add Movie for {{ user.name }}</h1>
+
+    <form method="POST">
+        <label for="title">Movie Title:</label>
+        <input type="text" id="title" name="title" required>
+        <button type="submit">Add Movie</button>
+    </form>
+
+    <a href="/users/{{ user.id }}">Back to Movies</a>
+</body>
+</html>
