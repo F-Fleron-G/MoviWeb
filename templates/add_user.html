@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add User - MovieWeb App</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add User - MoviWeb App{% endblock %}
+
+{% block content %}
+<div class="add-movie-container">
+
+  <div class="form-container">
     <h1>Add New User</h1>
-
-    <form method="POST">
-        <label for="name">User Name:</label>
-        <input type="text" id="name" name="name" required>
-        <button type="submit">Add User</button>
+    <form class="add-movie-form" method="POST">
+      <input type="text" id="name" name="name" placeholder="User Name..." required>
+      <button type="submit">Add User</button>
     </form>
+    <a class="show-more-btn"
+       style="width:140px; text-align: center; text-decoration: none;"
+       href="{{ url_for('list_users') }}">
+      ← Back to Users
+    </a>
+  </div>
 
-    <a href="/users">Back to Users</a>
-</body>
-</html>
+  <div class="add-user-image">
+    <img style="width: 75%;" src="{{ url_for('static', filename='images/add_user_img.png') }}" alt="Add User">
+  </div>
+
+</div>
+{% endblock %}

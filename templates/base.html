@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}MovieWeb App{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="{% if 'admin' in request.path %}admin-page{% elif 'users' in request.path %}users-page{% elif
+ 'user_movies' in request.path %}user-movies-page{% endif %}">
+    <header class="site-header">
+        <div class="container">
+            <div class="theme-toggle-wrapper">
+              <input type="checkbox" id="theme-toggle" />
+              <label for="theme-toggle" class="theme-toggle-label">
+                <span class="theme-slider"></span>
+              </label>
+            </div>
+            <nav class="navbar">
+                <a href="{{ url_for('home') }}" class="logo-link">
+                    <img src="{{ url_for('static', filename='images/MoviWeb_logo.png') }}" alt="MovieWeb Logo" class="logo-image">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('list_users') }}">Users</a></li>
+                    <li><a href="{{ url_for('add_user') }}">Add User</a></li>
+                    <li><a href="{{ url_for('admin_panel') }}">Admin</a></li>
+                    <li><a href="{{ url_for('home') }}#about-section">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 MoviWeb.</p>
+            <p>Created by Frederic G. Fleron.</p>
+            <p>All Rights Reserved.</p>
+            <img src="{{ url_for('static', filename='images/MoviWeb_ftr_img.png') }}" alt="Movie Film Reel" class="footer-image">
+        </div>
+    </footer>
+<a href="#" class="back-to-top">&#x25B2;</a>
+</body>
+</html>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  const currentTheme = localStorage.getItem('theme');
+
+  if (currentTheme === 'light') {
+    html.setAttribute('data-theme', 'light');
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener('change', () => {
+    const theme = toggle.checked ? 'light' : 'dark';
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-review').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        const reviewText = this.previousElementSibling;
+        reviewText.classList.toggle('expanded');
+        this.textContent = reviewText.classList.contains('expanded') ? 'Read Less' : 'Read More';
+      });
+    });
+  });
+</script>
+
+<script>
+let userVisibleCount = 8;
+let userExpanded = false;
+
+function toggleUsers() {
+    const users = document.querySelectorAll('.user-card');
+    const button = document.querySelector('.show-more-btn');
+    const usersPerRow = 4;
+
+    if (!userExpanded) {
+        userVisibleCount += usersPerRow;
+    } else {
+        userVisibleCount -= usersPerRow;
+    }
+
+    if (userVisibleCount <= 8) {
+        userVisibleCount = 8;
+        userExpanded = false;
+    }
+
+    users.forEach((user, index) => {
+        if (index < userVisibleCount) {
+            user.style.display = "flex";
+        } else {
+            user.style.display = "none";
+        }
+    });
+
+    if (userVisibleCount >= users.length) {
+        userExpanded = true;
+        button.textContent = "Show Less ↑";
+    } else if (userVisibleCount <= 8) {
+        userExpanded = false;
+        button.textContent = "Show More ↓";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.body.classList.contains('users-page')) {
+        const users = document.querySelectorAll('.user-card');
+        users.forEach((user, index) => {
+            if (index < 8) {
+                user.style.display = "flex";
+            } else {
+                user.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+
+<script>
+let adminVisibleCount = 6;
+let adminExpanded = false;
+
+function toggleAdminUsers() {
+    const users = document.querySelectorAll('.user-card');
+    const button = document.querySelector('.show-more-btn');
+    const usersPerRow = 3;
+
+    if (!adminExpanded) {
+        adminVisibleCount += usersPerRow;
+    } else {
+        adminVisibleCount -= usersPerRow;
+    }
+
+    if (adminVisibleCount <= 6) {
+        adminVisibleCount = 6;
+        adminExpanded = false;
+    }
+
+    users.forEach((user, index) => {
+        if (index < adminVisibleCount) {
+            user.style.display = "flex";
+        } else {
+            user.style.display = "none";
+        }
+    });
+
+    if (adminVisibleCount >= users.length) {
+        adminExpanded = true;
+        button.textContent = "Show Less ↑";
+    } else if (adminVisibleCount <= 6) {
+        adminExpanded = false;
+        button.textContent = "Show More ↓";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.body.classList.contains('admin-page')) {
+        const users = document.querySelectorAll('.user-card');
+        users.forEach((user, index) => {
+            if (index < 6) {
+                user.style.display = "flex";
+            } else {
+                user.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const movies = Array.from(document.querySelectorAll('.movie-card'));
+  const button = document.querySelector('.show-more-movies-btn');
+  const moviesPerRow = 3;
+  let visibleCount = moviesPerRow;
+  let expanded = false;
+
+  function render() {
+    movies.forEach((m, i) => m.style.display = i < visibleCount ? 'flex' : 'none');
+
+    if (!expanded) {
+      button.textContent = visibleCount < movies.length
+        ? 'Show More ↓'
+        : '';
+    } else {
+      button.textContent = visibleCount > moviesPerRow
+        ? 'Show Less ↑'
+        : '';
+    }
+
+    if (movies.length <= moviesPerRow) {
+      button.style.display = 'none';
+    } else {
+      button.style.display = 'inline-block';
+    }
+  }
+
+  button.addEventListener('click', () => {
+    if (!expanded) {
+      // “Show More” clicked
+      visibleCount = Math.min(visibleCount + moviesPerRow, movies.length);
+      if (visibleCount === movies.length) expanded = true;
+    } else {
+      visibleCount = Math.max(visibleCount - moviesPerRow, moviesPerRow);
+      if (visibleCount === moviesPerRow) expanded = false;
+    }
+    render();
+  });
+
+  render();
+});
+</script>
+

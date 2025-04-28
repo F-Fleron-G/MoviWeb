@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel ({{ users|length }}) - MoviWeb{% endblock %}
+
+{% block content %}
+<div class="users-header">
+    <h1>Admin Panel ({{ users|length }})</h1>
+
+    <form class="search-form" method="GET" action="{{ url_for('admin_panel') }}">
+        <input type="text" name="q" placeholder="Search users..." value="{{ query }}" />
+        <button class="search-button" type="submit">Search</button>
+    </form>
+</div>
+
+{% if users %}
+  <div class="user-grid-wrapper">
+      <div class="admin-grid">
+          {% for user in users %}
+              <div class="user-card">
+                  <p><strong>{{ user.name }}</strong></p>
+                  <p><small>ID: {{ user.id }}</small></p>
+                  <a class="delete-btn" href="{{ url_for('delete_user', user_id=user.id) }}"
+                     onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+              </div>
+          {% endfor %}
+      </div>
+  </div>
+
+  <div class="user-actions">
+      <a class="add-user-btn" href="{{ url_for('list_users') }}">← Back to Users</a>
+      <button class="show-more-btn" onclick="toggleAdminUsers()">Show More ↓</button>
+  </div>
+{% else %}
+  <p>No users found.</p>
+{% endif %}
+{% endblock %}

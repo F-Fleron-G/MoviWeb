@@ -1,28 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update Movie - MovieWeb App</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Update Movie - MoviWeb App{% endblock %}
+
+{% block content %}
+<div class="add-movie-container">
+
+  <div class="form-container">
     <h1>Update Movie for {{ user.name }}</h1>
-
-    <form method="POST">
-        <label for="name">Title:</label>
-        <input type="text" id="name" name="name" value="{{ movie.name }}" required><br>
-
-        <label for="director">Director:</label>
-        <input type="text" id="director" name="director" value="{{ movie.director }}"><br>
-
-        <label for="year">Year:</label>
-        <input type="number" id="year" name="year" value="{{ movie.year }}"><br>
-
-        <label for="rating">Rating:</label>
-        <input type="number" step="0.1" id="rating" name="rating" value="{{ movie.rating }}"><br>
-
-        <button type="submit">Update Movie</button>
+    <form id="edit-movie-form" class="add-movie-form" method="POST">
+      <label style="line-height:0.2em;" for="name">Title:</label>
+      <input style="border: 2px solid var(--accent-color);" type="text" id="name" name="name" value="{{ movie.name }}" required>
+      <label style="line-height:0.2em;" for="director">Director:</label>
+      <input style="border: 2px solid var(--accent-color);" type="text" id="director" name="director" value="{{ movie.director }}">
+      <label style="line-height:0.2em;" for="year">Year:</label>
+      <input style="border: 2px solid var(--accent-color);" type="number" id="year" name="year" value="{{ movie.year }}">
+      <label style="line-height:0.2em;" for="rating">Rating:</label>
+      <input style="border: 2px solid var(--accent-color);" type="number" step="0.1" id="rating" name="rating" value="{{ movie.rating }}">
     </form>
 
-    <a href="/users/{{ user.id }}">Back to Movies</a>
-</body>
-</html>
+    <div class="add-review-btn">
+    <a class="show-more-btn"
+       style="text-decoration: none;" href="{{ url_for('user_movies', user_id=user.id) }}">← Back to Movies</a>
+    <button class="submit-review-btn" type="submit" form="edit-movie-form">Update Movie</button>
+    </div>
+
+  </div>
+
+  <div class="edit-movie">
+    <img src="{{ url_for('static', filename='images/edit_movie_img.png') }}"
+         alt="Update Movie">
+  </div>
+
+</div>
+{% endblock %}

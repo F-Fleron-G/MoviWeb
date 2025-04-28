@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to MovieWeb{% endblock %}
+
+{% block content %}
+    <div class="welcome container">
+        <h1>Welcome to MoviWeb</h1>
+        <p>Your Personalised Movie Manager App!</p>
+
+        <div class="home-card-grid">
+
+            <div class="home-card">
+                <a href="{{ url_for('list_users') }}" class="home-card-link">
+                    <img src="{{ url_for('static', filename='images/view_users_icon.png') }}" alt="View Users" class="home-card-img">
+                    <h2>View Users</h2>
+                </a>
+            </div>
+
+            <div class="home-card">
+                <a href="{{ url_for('add_user') }}" class="home-card-link">
+                    <img src="{{ url_for('static', filename='images/add_user_icon.png') }}" alt="Add User" class="home-card-img">
+                    <h2>Add User</h2>
+                </a>
+            </div>
+
+            <div class="home-card">
+                <a href="{{ url_for('admin_panel') }}" class="home-card-link">
+                    <img src="{{ url_for('static', filename='images/admin_icon.png') }}" alt="Admin" class="home-card-img">
+                    <h2>Admin</h2>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+        <section class="about-section" id="about-section">
+          <div class="about-container">
+
+            <div class="about-left">
+              <img src="{{ url_for('static', filename='images/about_image.png') }}" alt="About MoviWeb" class="about-image">
+            </div>
+
+            <div class="about-right">
+              <h2>About MoviWeb</h2>
+              <p class="about-intro">
+                Manage your favorite movies, discover new picks, and create your cinematic collection!
+              </p>
+
+              <div class="about-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                  <div class="timeline-branch"></div>
+                  <p>View Users: See who’s collecting cinematic treasures.</p>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-branch"></div>
+                  <p>Add Viewer: Recruit new movie buffs to your crew.</p>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-branch"></div>
+                  <p>Admin: Manage the MovieWeb backstage like a pro!</p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+{% endblock %}

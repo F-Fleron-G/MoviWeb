@@ -1,26 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Movies - MovieWeb App</title>
-</head>
-<body>
-    <h1>{{ user.name }}'s Favorite Movies</h1>
+{% extends "base.html" %}
 
-    {% if movies %}
-        <ul>
+{% block title %}{{ user.name }}'s Movies - MovieWeb App{% endblock %}
+
+{% block content %}
+
+        <div class="movies-header">
+            <h1>{{ user.name }} ({{ movies|length }}) Favorite Movies</h1>
+            <a class="cta-button" href="{{ url_for('add_movie', user_id=user.id) }}">+ Add Movie</a>
+        </div>
+
+        {% if movies %}
+        <div class="movie-grid">
             {% for movie in movies %}
-                <li>
-                    <strong>{{ movie.name }}</strong> ({{ movie.year }})
-                    - Directed by {{ movie.director }}
-                    - Rating: {{ movie.rating }}
-                </li>
+                <div class="movie-card">
+
+                <div class="poster-container">
+                    {% if movie.poster_url and movie.poster_url != "N/A" %}
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.name }} Poster" class="poster">
+                        <div class="poster-overlay">
+                            <a class="play-button"
+                               href="https://www.imdb.com/find?q={{ movie.name | urlencode }}"
+                               target="_blank">
+                                ▶
+                            </a>
+                            <p class="preview-text">Preview</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="movie-info">
+                    <h3>{{ movie.name }}</h3>
+                    <p><strong>Year:</strong> {{ movie.year }}</p>
+                    <p><strong>Director:</strong> {{ movie.director }}</p>
+                </div>
+                    <p>
+                        <strong>Rating:</strong>
+                        <span class="rating-badge {{ 'high' if movie.rating >= 8 else 'mid' if movie.rating >= 5 else 'low' }}">
+                            {{ movie.rating }}
+                        </span>
+                    </p>
+                    <div class="movie-actions">
+                        <a class="movie-btn edit" href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}">Edit Movie</a>
+                        <a class="movie-btn delete" href="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}"
+                           onclick="return confirm('Are you sure you want to delete this movie?');">Delete Movie</a>
+                    </div>
+
+                    {% if movie.reviews %}
+                        <div class="reviews">
+                            <h4>User Reviews</h4>
+                            <ul>
+                                {% for review in movie.reviews %}
+                                    <li class="review-item">
+                                        <div class="review-text collapsed">
+                                            <i>"{{ review.text }}"</i>
+                                        </div>
+                                        <a href="#" class="toggle-review">Read More</a>
+                                        <div class="review-rating">Your Rating: <strong>{{ '%.1f'|format(review.rating) }}</strong></div>
+                                        <div class="review-buttons">
+                                        <a class="review-link" href="{{ url_for('edit_review', user_id=user.id, movie_id=movie.id) }}">Edit Review</a>
+                                        <a class="review-link delete-review" href="{{ url_for('delete_review', user_id=user.id, movie_id=movie.id) }}"
+                                           onclick="return confirm('Are you sure you want to delete this review?');">Delete Review</a></div>
+                                    </li>
+
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <p class="no-reviews">No reviews yet.</p>
+                        <a class="review-link" href="{{ url_for('add_review', user_id=user.id, movie_id=movie.id) }}">Write a Review</a>
+                    {% endif %}
+
+                </div>
             {% endfor %}
-        </ul>
+        </div>
+
     {% else %}
+    <div class="no-movies">
         <p>No movies found for this user.</p>
+    </div>
     {% endif %}
 
-    <a href="/users">Back to Users</a>
-</body>
-</html>
+    <div class="user-actions">
+        <a class="add-user-btn" href="{{ url_for('list_users') }}">← Back to Users</a>
+        <button class="show-more-movies-btn" onclick="toggleUserMovies()">Show More ↓</button>
+    </div>
+{% endblock %}

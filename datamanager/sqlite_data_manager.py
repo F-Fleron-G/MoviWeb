@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine, and_
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, joinedload
 from models import Base, User, Movie
 from datamanager.data_manager_interface import DataManagerInterface
 
 """
-    Concrete implementation of the DataManagerInterface using SQLite and SQLAlchemy.
+    Concrete implementation of the DataManagerInterface using SQLite
+    and SQLAlchemy.
     Handles all CRUD operations on users and movies.
 """
 
@@ -40,7 +41,12 @@ class SQLiteDataManager(DataManagerInterface):
 
         session = self.Session()
         try:
-            movies = session.query(Movie).filter(and_(Movie.user_id == user_id)).all()
+            movies = (
+                session.query(Movie)
+                .options(joinedload(Movie.reviews))
+                .filter(Movie.user_id == user_id)
+                .all()
+            )
             return movies
         finally:
             session.close()
@@ -62,7 +68,22 @@ class SQLiteDataManager(DataManagerInterface):
         finally:
             session.close()
 
-    def add_movie(self, name, director, year, rating, user_id):
+    def delete_user(self, user_id):
+        """
+            Delete a user and their movies from the database.
+        """
+        session = self.Session()
+        try:
+            user = session.query(User).filter(and_(User.id == user_id)).first()
+            if not user:
+                return False
+            session.delete(user)
+            session.commit()
+            return True
+        finally:
+            session.close()
+
+    def add_movie(self, name, director, year, rating, user_id, poster_url=None):
         """
            Add a new movie to a user's movie list.
 
@@ -81,7 +102,8 @@ class SQLiteDataManager(DataManagerInterface):
                 director=director,
                 year=year,
                 rating=rating,
-                user_id=user_id
+                user_id=user_id,
+                poster_url=poster_url
             )
             session.add(new_movie)
             session.commit()
@@ -89,7 +111,8 @@ class SQLiteDataManager(DataManagerInterface):
         finally:
             session.close()
 
-    def update_movie(self, movie_id, name=None, director=None, year=None, rating=None):
+    def update_movie(self, movie_id, name=None, director=None, year=None,
+                     rating=None):
         """
             Update movie details in the database.
 

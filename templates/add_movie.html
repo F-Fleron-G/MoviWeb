@@ -1,18 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Movie - MovieWeb App</title>
-</head>
-<body>
-    <h1>Add Movie for {{ user.name }}</h1>
+{% extends "base.html" %}
 
-    <form method="POST">
-        <label for="title">Movie Title:</label>
-        <input type="text" id="title" name="title" required>
-        <button type="submit">Add Movie</button>
-    </form>
+{% block title %}Add Movie - MovieWeb App{% endblock %}
 
-    <a href="/users/{{ user.id }}">Back to Movies</a>
-</body>
-</html>
+{% block content %}
+<div class="add-movie-container">
+
+    <div class="form-container">
+        <h1>Add a Movie for {{ user.name }}</h1>
+        <form method="POST" class="add-movie-form">
+            <input type="text" id="title" name="title" placeholder="Movie title..." required>
+            <button class="cta-button" type="submit">Add Movie</button>
+        </form>
+        <a class="show-more-btn" style="width:140px; text-align: center; text-decoration: none;" href="{{ url_for('user_movies', user_id=user.id) }}">← Back to Movies</a>
+    </div>
+
+    <div class="video-preview">
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/uY5oF0tZiWI?si=RcNIlATlxRYo7a-k"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+    </div>
+
+</div>
+{% endblock %}

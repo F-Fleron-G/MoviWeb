@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Review {{ movie.name }} - MoviWeb App{% endblock %}
+
+{% block content %}
+<div class="add-movie-container">
+
+  <div class="form-container">
+    <h1>Write a Review for {{ movie.name }}</h1>
+    <form id="review-form" class="add-movie-form"  method="POST">
+      <textarea style="border: 2px solid var(--accent-color);" name="review" id="review" rows="4" placeholder="Your Review..." required></textarea>
+      <input style="border: 2px solid var(--accent-color);" type="number" name="rating" id="rating" min="0" max="10" step="0.1" placeholder="Your Rating (0–10)" required>
+    </form>
+
+      <div class="add-review-btn">
+         <a class="show-more-btn"
+           style="text-decoration: none;" href="{{ url_for('user_movies', user_id=user.id) }}">← Back to Movies</a>
+          <button class="submit-review-btn" type="submit" form="review-form">Submit Review</button>
+      </div>
+
+  </div>
+
+  <div class="add-review-image">
+    <img src="{{ url_for('static', filename='images/add_review_img.png') }}"
+         alt="Add Review">
+  </div>
+
+</div>
+{% endblock %}

@@ -1,17 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All Users - MovieWeb</title>
-</head>
-<body>
-    <h1>Registered Users</h1>
-    <ul>
+{% extends "base.html" %}
+
+{% block title %}All Users ({{ users|length }}) - MoviWeb{% endblock %}
+
+{% block content %}
+<div class="users-header">
+    <h1>Registered Users ({{ users|length }})</h1>
+
+    <form class="search-form" method="GET" action="{{ url_for('list_users') }}">
+        <input type="text" name="q" placeholder="Search users..." value="{{ query }}" />
+        <button class="search-button" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="user-grid-wrapper">
+    <div class="user-grid">
         {% for user in users %}
-            <li><a href="/users/{{ user.id }}">{{ user.id }}: {{ user.name }}</a></li>
+            <div class="user-card">
+                <a href="{{ url_for('user_movies', user_id=user.id) }}">{{ user.name }}</a>
+            </div>
         {% else %}
-            <li>No users found.</li>
+            <div class="user-card">No users found.</div>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    </div>
+</div>
+
+<div class="user-actions">
+    <a class="add-user-btn" href="{{ url_for('add_user') }}">+ Add New User</a>
+    <button class="show-more-btn" onclick="toggleUsers()">Show More ↓</button>
+</div>
+{% endblock %}
