@@ -84,8 +84,11 @@ Then open your browser at http://127.0.0.1:5000.
     └── README.md
    ```
 
+##  Planned Improvements
+- Enhance mobile responsiveness
+- Add more testing coverage
+  
 ## License
-
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
